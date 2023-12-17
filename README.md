@@ -9,6 +9,9 @@ A collection of extensions and utilities for C# useful for many projects.
 * [Extended Types](#extended-types)
 * [Utilities](#utilities)
 * [Support](#support)
+* [Roadmap](#roadmap)
+* [Contribute](#contributing)
+* [License](#license)
 
 ## Extended Types
 
@@ -407,7 +410,7 @@ Use the [integrated issue tracker](https://git.lekode.com/lekode/sharpextended/-
 
 The development is done according to new necessities. Hence, no roadmap is currently undefined.
 
-## Contributing 
+## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
