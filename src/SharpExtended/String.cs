@@ -41,7 +41,7 @@ public static partial class String {
     /// </summary>
     /// <param name="str">String to convert</param>
     /// <returns>Integer</returns>
-    public static ulong ToInt64(this string str) => Convert.ToUInt64(str);
+    public static ulong ToUlong(this string str) => Convert.ToUInt64(str);
     
     /// <summary>
     /// Alias for Convert.ToInt32
