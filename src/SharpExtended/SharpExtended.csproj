@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Sharp Extended</Title>
+        <Authors>Pedro Cavaleiro</Authors>
+        <Description>Adds type extensions, Json Coverters and utilities to C#</Description>
+        <Copyright>Lekode © 2023</Copyright>
+        <PackageProjectUrl>https://git.lekode.com/lekode/sharpextended</PackageProjectUrl>
+        <PackageIcon>cpp.png</PackageIcon>
+        <RepositoryUrl>https://git.lekode.com/lekode/sharpextended</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Ensure.Net" Version="2.4.0" />
+      <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="cpp.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+    </ItemGroup>
+
+</Project>
