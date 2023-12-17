@@ -1,93 +1,422 @@
 # SharpExtended
 
+A collection of extensions and utilities for C# useful for many projects.
 
+* **Author:** Pedro Cavaleiro
+* **Contact:** p.cavaleiro@lekode.com
 
-## Getting started
+## Table of Contents
+* [Extended Types](#extended-types)
+* [Utilities](#utilities)
+* [Support](#support)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Extended Types
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+* [Array](#array)
+* [DateTime](#datetime)
+* [Enum](#httpclient)
+* [HttpClient](#httpclient)
+* [HttpResponseMessage](#httpresponsemessage)
+* [IEnumerable](#ienumerable)
+* [Int](#int)
+* [JsonSerializer](#jsonserializer)
+* [List](#list)
+* [NameValueCollection](#namevaluecollection)
+* [Object](#object)
+* [String](#string)
 
-## Add your files
+### Array
+#### RemoveIndices
+Allows to remove a specific index of a array.
+* Signature: `public static T[] RemoveIndices<T>(this T[] indicesArray, int removeAt)`
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+#### AddElementToArray
+Adds a element to the end of a array.
+* Signature: `public static T[] AddElementToArray<T>(this T[] array, T element)`
 
+#### TruncateStrings
+Truncates all strings in a array to a specific size.
+* Signature: `public static string[] TruncateStrings(this string[] arr, int maxLength)`
+
+#### ToIntArray
+Converts a string array to a int array. A non int value will throw a exception.
+* Signature: `public static int[] ToIntArray(this string[] arr)`
+
+#### TrimStrings
+Trims all strings in a array.
+* Signature: `public static string[] TrimStrings(this string[] arr)`
+
+#### ToStringArray
+Converts a array of enums to a array of strings, the enums must contain the `[Description(""")]` attribute (see [Enum](#enum)).
+* Signature: `public static string?[] ToStringArray<T>(this T[] enumerator)`
+
+#### ToList
+Converts a array of strings to a list of the specified enum. Strings that can't be parsed will be ignored. 
+* Signature: `public static List<T> ToList<T>(IEnumerable<string> arr) where T : Enum`
+
+### DateTime
+#### TruncateDate
+Truncates a DateTime to a specific time component.
+
+Available Components:
+* Year
+* Quarter
+* Month
+* Week
+* Day
+* Hour
+* Minute
+* Second
+
+Signature: `public static DateTime TruncateDate(this DateTime inDate, Accuracy accuracy)`
+
+#### AddsWeeks
+Adds weeks to the DateTime.
+* Signature: `public static DateTime AddWeeks(this DateTime date, int value)`
+
+#### InWeek
+Verifies if a date is in the current week.
+* Signature: `public static bool InWeek(DateTime date)`
+
+#### InMonth
+Verifies if a date is in the current month.
+* Signature: `public static bool InMonth(DateTime date)`
+
+#### CurrentWeek
+Gets the current week, returns the start and end of the week.
+* Signature: `public static (DateTime, DateTime) CurrentWeek()`
+
+#### CurrentMonth
+Gets the current month, returns the start and end of the month.
+* Signature: `public static (DateTime, DateTime) CurrentMonth()`
+
+### Enum
+
+For these extensions the enum must contain the attribute `[Description("")]`.
+
+Example
+```csharp
+public enum SomeEnum {
+    [Description("enumvalue1")]
+    EnumValue1
+    //...
+}
 ```
-cd existing_repo
-git remote add origin http://git.lekode.com/lekode/sharpextended.git
-git branch -M main
-git push -uf origin main
+
+#### ParseEnum
+Parses a string to the specified enum. If it's not possible to parse the enum the exception `InvalidEnumException` will be thrown. 
+* Signature: `public static T ParseEnum<T>(this string str) where T : Enum`
+
+#### TryParseEnum
+Attempts to parse a string to the specified enum. Returns true if it's possible to parse false otherwise, use the parameter `@enum` to get the enum value.
+* Signature: `public static bool TryParseEnum<T>(this string str, out T? @enum) where T : Enum`
+
+#### GetDescription
+Gets the description of a enumerator.
+* Signature: `public static string? GetDescription(this Enum? e)`
+
+### HttpClient
+#### PatchAsJsonAsync
+Allows to send a http `Patch` request with Json content.
+* Signature: `public static Task<HttpResponseMessage> PatchAsJsonAsync<T>(this HttpClient client, string requestUri, T value)`
+
+### HttpResponseMessage
+#### ReadJsonContentAsAsync
+Allows you directly read from the HttpResponseMessage into a model matching the response Json.
+* Signature: 
+  ```csharp
+  public static async Task<T?> ReadJsonContentAsAsync<T>(
+    this HttpContent       content,
+    JsonSerializerOptions? options = null
+  )
+  ```
+
+### IEnumerable
+#### Each
+Iterates through a IEnumerable also providing the current index. **Note:** Does not support break .
+* Signature: `public static void Each<T>(this IEnumerable<T> ie, Action<T, int> action)`
+
+### Int
+#### CryptoRandom
+Generates a random number cryptographically within a range.
+* Signature: `public static int CryptoRandom(int min = 0, int max = 10)`
+
+### JsonSerializer
+#### DeserializeAnonymousType
+Allows you to deserialize a Json to an anonymous type effortlessly.
+* Signature: `public static T? DeserializeAnonymousType<T>(this string json, T anonymousTypeObject, JsonSerializerOptions? options = default)`
+
+#### Deserialize
+Deserializes a string to a model matching the Json.
+* Signature: `public static T? Deserialize<T>(this string json, JsonSerializerOptions? options = default)`
+
+#### Serialize
+Serializes a model.
+* Signature: `public static string Serialize<T>(this T json, JsonSerializerOptions? options = default)`
+
+### List
+#### StringsToLowerCase
+Transforms all strings in list to lowercased.
+* Signature: `public static List<string> StringsToLowerCase(this IEnumerable<string> list)`
+
+#### ScrambledEquals
+Checks if two lists are equal (contains the same elements) ignoring the order.
+* Signature: `public static bool ScrambledEquals<T>(IEnumerable<T> list1, IEnumerable<T> list2) where T : notnull`
+
+#### TrimStrings
+Trims all strings in a list.
+* Signature: `public static List<string> TrimStrings(this IEnumerable<string> list)`
+
+### NameValueCollection
+#### ToDictionary
+Converts a NameValueCollection to a Dictionary.
+* Signature: `public static Dictionary<string, string?> ToDictionary(this NameValueCollection collection)`
+
+### Object
+Copies data between two instances of the same class. It's possible to ignore the property marked with `[Key]`.
+* Signature: `public static void CopyTo<T>(this T from, T to, bool ignoreKey = true)`
+
+### String
+#### ToBool
+Converts a string to a boolean. If the string is to a valid boolean it will always return false.
+* Signature: `public static bool ToBool(this string value) `
+
+#### Base64Decode
+Decodes a base64 string to a string.
+* Signature: `public static string Base64Decode(this string base64EncodedData)`
+
+#### ToGuid
+Converts a string to a Guid. If it's not possible to parse to a guid it will return null.
+* Signature: `public static Guid? ToGuid(this string str)`
+
+#### ToUlong
+Converts a string to ulong. If it's not possible to convert it throws a exception.
+* Signature: `public static ulong ToInt64(this string str)`
+
+#### ToInt32
+Converts a string to int. If it's not possible to convert it throws a exception.
+* Signature: `public static int ToInt32(this string str)`
+
+#### ToBase64
+Converts a string to a base64 string.
+* Signature: `public static string ToBase64(this string plainText)`
+
+#### Truncate
+Truncates a string to the specified maximum length.
+* Signature: `public static string Truncate(this string value, int maxLength)`
+
+#### Sha1
+Generates the SHA1 hash of the string, the hash is returned in a hex string.
+* Signature: `public static string Sha1(this string input)`
+
+#### Sha256
+Generates the SHA256 hash of the string, the hash is returned in a hex string.
+* Signature: `public static string Sha256(this string text)`
+
+#### HmacSha256
+Generates the HMAC-SHA256 of a string, the HMAC is returned in a hex string.
+* Signature: `public static string HmacSha256(this string text, string key)`
+
+#### HmacMd5
+Generates the HMAC-MD5 of a string, the HMAC is returned in a hex string. 
+
+**WARNING:** MD5 it is a weak hashing algorithm and it is highly discouraged it's use .
+* Signature: `public static string HmacMd5(this string text, string key)`
+
+#### SaltAndHash
+Salts and hashes a string, recommended to secure store passwords. See [Security](#security) on how to securely generate a salt.
+* Signature: `public static string SaltAndHash(this string password, string salt) `
+* Signature: `public static string SaltAndHash(this string password, byte[] salt)`
+
+#### Md5
+Generates the MD5 hash of the string, the hash is returned in a hex string.
+
+**WARNING:** MD5 it is a weak hashing algorithm and it is highly discouraged it's use.
+* Signature: `public static string Md5(this string input)`
+
+#### ContainsUnicodeCharacter
+Checks if a string contains any unicode characters.
+* Signature: `public static bool ContainsUnicodeCharacter(this string input)`
+
+#### IsValidEmail
+Checks if a email is valid.
+* Signature: `public static bool IsValidEmail(this string str)`
+
+#### ComparePasswords
+Compares two passwords, the plain-text password and the stored hash, requires the salt to correctly compare the passwords.
+* Signature: `public static bool ComparePasswords(this string password, string storedHash, string salt)`
+
+#### ClosestMatch
+Given a list of strings and the input string it returns which string from the list is the closest match to the input. This uses the Levenshtein Distance algorithm.
+* Signature: `public static string ClosestMatch(this string text, string[] strings)`
+
+#### GenerateCeo
+Based on a string generates a CEO friendly string.
+* Signature: `public static string GenerateCeo(this string s)`
+
+#### IsNullOrEmpty
+Checks if the string is null or empty.
+* Signature: `public static bool IsNullOrEmpty(this string? str)`
+
+## Utilities
+
+* [Json Converters](#json-converters)
+  * EnumDescriptionConverter
+  * UlongStringifier
+* [AesCrypt](#aescrypt)
+* [Security](#security)
+* [Result](#result)
+
+### Json Converters
+
+The following JsonConverts are available:
+* EnumDescriptionConverter;
+* UlongStringifier
+
+The `EnumDescriptionConverter` converts between the given enum but the enum requires the attribute `[Description("")]`, see [Enum](#enum).
+
+The `UlongStringifier` converts between ulong a string to avoid issues with JavaScript.
+
+### AesCrypt
+
+Allows the encryption and decryption of strings using AES algorithm.
+
+The passphrase must be 128 (16 characters), 192 (24 characters) or 256 (32 characters) bit long and the IV must be 128 bit long (16 characters).
+
+```csharp
+var cypher = new AesCrypt(passphrase, iv);
+var encrypted = cypher.Encrypt(plaintext);
+var decrypted = cypher.Decrypt(encrypted); 
 ```
 
-## Integrate with your tools
+The following options are also available
+```csharp
+public AesCryptOptions() {
+      PasswordHashSalt       = "";
+      PasswordHash           = AesPasswordHash.Sha1;
+      PasswordHashIterations = 1;
+      MinSaltLength          = 0;
+      MaxSaltLength          = 0;
+      FixedKeySize           = null; // if null it will be calculated from the key size
+      PaddingMode            = PaddingMode.PKCS7;
+}
+```
 
-- [ ] [Set up project integrations](http://git.lekode.com/lekode/sharpextended/-/settings/integrations)
+### Security
 
-## Collaborate with your team
+Some of these methods are used by the [extensions](#extended-types) for more convenient use.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+#### GenerateSaltedHash
+Salts a byte array.
+* Signature: `public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)`
 
-## Test and Deploy
+#### CompareByteArrays
+Compares the byte arrays.
+* Signature: `public static bool CompareByteArrays(byte[] array1, byte[] array2)`
 
-Use the built-in continuous integration in GitLab.
+#### GetSalt
+Generates a cryptographically secure salt to a maximum length.
+* Signature: `public static byte[] GetSalt(int maximumSaltLength = 64)`
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+#### Sha1
+Generates the Sha1 of a string returning the hash as hex string.
+* Signature: `public static string Sha1(string input)`
 
-***
+#### Sha256
+Generates the Sha256 of a string returning the hash as hex string.
+* Signature: `public static string Sha256(string input)`
 
-# Editing this README
+#### HmacSha256
+Generates the HMAC-SHA256 of a byte array.
+* Signature: `public static IEnumerable<byte> HmacSha256(byte[] data, string key)`
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+#### HmacMd5
+Generates the HMAC-MD5 of a byte array.
 
-## Suggestions for a good README
+**WARNING:** MD5 it is a weak hashing algorithm and it is highly discouraged it's use.
+* Signature: `public static IEnumerable<byte> HmacMd5(byte[] data, string key)`
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+#### GenerateRsaKeyPair
+Generates an RSA Public/Private key pair.
+* Signature: `public static RsaPublicPrivateKeyPair GenerateRsaKeyPair(int size = 2048)`
 
-## Name
-Choose a self-explaining name for your project.
+#### RsaEncryptWithPublic
+Encrypts a string using an RSA public key.
+* Signature: `public static string RsaEncryptWithPublic(string clearText, string publicKey)`
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+#### RsaEncryptWithPrivate
+Encrypts a string using an RSA private key.
+* Signature: `public static string RsaEncryptWithPrivate(string clearText, string privateKey)`
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+#### RsaDecryptWithPrivate
+Decrypts a string using an RSA private key, the input is a base64 string.
+* Signature: `public static string RsaDecryptWithPrivate(string base64Input, string privateKey)`
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+#### RsaDecryptWithPublic
+Decrypts a string using an RSA public key, the input is a a base64 string.
+* Signature: `public static string RsaDecryptWithPublic(string base64Input, string publicKey)`
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+#### Md5
+Generates a MD5 hash.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+**WARNING:** MD5 it is a weak hashing algorithm and it is highly discouraged it's use.
+* Signature: `public static byte[] Md5(byte[] data)`
+
+### Result
+
+A small class to use return based error handling. It's usage is rather simple.
+
+The base class `Result` implements the following:
+
+* Properties
+  * `bool Success`
+  * `string Error`
+  * `List<string> StackTrace`
+  * `bool IsFailure`
+
+* Methods
+  * `Fail("message")`: Returns the Result instance with a error message;
+  * `AddFail("new error")`: Adds to the currents result a new error, the current one is pushed to the top of the StackTrace;
+  * `Ok()`: Returns the Result instance with no error.
+
+The class `Result` can be expanded and already implemented is `Result<T>` which allows the class to hold a value, this adds the following capabilities:
+
+* Properties:
+  * `T Value`
+
+* Methods:
+  * `Fail<T>("message")`: Returns the Result instance with a error message, the type `T` is required to properly compute the default type for the `Value` property;
+  * `Ok<T>(T value)`: Returns the Result instance with no error and with a `Value` of type `T`.
+
+Usage Examples:
+```csharp
+var result1 = Result.Fail("some error ocurred");
+var result2 = Result.Ok();
+var result3 = Result.Fail<string>("a weird error happened");
+result3.AddFail("another error ocurred");
+var result4 = Result.Ok(complexObject); //C# will infer the type from the parameter
+```
+
+It's possible to further expanding from the `Result` and `Result<T>` to add more functionality.
 
 ## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+
+Use the [integrated issue tracker](https://git.lekode.com/lekode/sharpextended/-/issues).
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+The development is done according to new necessities. Hence, no roadmap is currently undefined.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Contributing 
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push the commit to the branch (`git push origin feature/AmazingFeature`)
+5. Open a pull request
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+[MIT License](LICENSE)
