@@ -1,6 +1,7 @@
-using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace SharpExtended;
 
@@ -11,9 +12,8 @@ public static partial class String {
     /// </summary>
     /// <param name="value">The string to parse from</param>
     /// <returns>Boolean</returns>
-    public static bool ToBool(this string value) {
-        return value.ToLower() == "true";
-    }
+    public static bool ToBool(this string value) =>
+        value.Equals("true", StringComparison.CurrentCultureIgnoreCase);
 
     /// <summary>
     /// Converts from base64 to a string
@@ -42,6 +42,13 @@ public static partial class String {
     /// <param name="str">String to convert</param>
     /// <returns>Integer</returns>
     public static ulong ToUlong(this string str) => Convert.ToUInt64(str);
+
+    /// <summary>
+    /// Alias for Convert.ToInt64
+    /// </summary>
+    /// <param name="str">String to convert</param>
+    /// <returns>Integer</returns>
+    public static long ToLong(this string str) => Convert.ToInt64(str);
     
     /// <summary>
     /// Alias for Convert.ToInt32
@@ -266,6 +273,65 @@ public static partial class String {
     /// <param name="str">String to check</param>
     /// <returns>True if the string is null or empty otherwise false</returns>
     public static bool IsNullOrEmpty(this string? str) => string.IsNullOrEmpty(str);
+
+    /// <summary>
+    /// Truncates a chunk of HTML by the Inner Text of the document but keeps the HTML tags
+    /// Unclosed tags will be automatically closed
+    /// This function uses the <see cref="TruncateWords"/> method
+    /// </summary>
+    /// <param name="html">HTML to truncate</param>
+    /// <param name="charLimit">Maximum amount of characters</param>
+    /// <param name="insertDots">If the text was truncated auto insert "..." before closing the last tag</param>
+    /// <returns>The truncated HTML</returns>
+    public static string TruncateHtmlByWords(this string html, int charLimit, bool insertDots = true) {
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+
+        var tagMatches   = Regex.Matches(doc.DocumentNode.OuterHtml, "<.*?>");
+        var tagPositions = new Dictionary<int, (string, bool)>();
+
+        foreach (Match tag in tagMatches)
+            tagPositions[tag.Index] = (tag.Value, tag.Value.Contains('/'));
+
+        var unclosedStack   = new Stack<string>();
+        var truncatedText   = doc.DocumentNode.InnerText.TruncateWords(charLimit, out var truncated);
+
+        foreach (var tagPosition in tagPositions.Where(tagPosition => tagPosition.Key < truncatedText.Length)) {
+            if (tagPosition.Value.Item2)
+                _ = unclosedStack.TryPop(out _);
+            if (tagPosition.Value.Item1 != "<br>" && !tagPosition.Value.Item2)
+                unclosedStack.Push(tagPosition.Value.Item1);
+            truncatedText = truncatedText.Insert(tagPosition.Key, tagPosition.Value.Item1);
+        }
+
+        for (var i = 0; i < unclosedStack.Count; i++) {
+            if (unclosedStack.Count == 1 && insertDots && truncated)
+                truncatedText += "...";
+            truncatedText += unclosedStack.Pop().Replace("<", "</");
+        }
+
+        return truncatedText;
+
+    }
+
+    /// <summary>
+    /// Truncates text to a maximum amount of characters, this will not split words
+    /// </summary>
+    /// <param name="text">Text to truncate</param>
+    /// <param name="maxLength">Maximum amount of characters</param>
+    /// <param name="truncated">Specifies if the string was truncated or not</param>
+    /// <returns>The truncated string or the entire string of the maxLength is higher than the text length</returns>
+    public static string TruncateWords(this string text, int maxLength, out bool truncated) {
+        if (text.Length <= maxLength) {
+            truncated = false;
+            return text;
+        }
+
+        var lastSpaceIndex = text[..maxLength].LastIndexOf(' ');
+        var truncatedText  = text[..lastSpaceIndex];
+        truncated = true;
+        return truncatedText;
+    }
 
     [GeneratedRegex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*")]
     private static partial Regex EmailValidationRegex();
