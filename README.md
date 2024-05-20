@@ -11,6 +11,7 @@ A collection of extensions and utilities for C# useful for many projects.
 * [Support](#support)
 * [Roadmap](#roadmap)
 * [Contribute](#contributing)
+* [Change Log](#change-log)
 * [License](#license)
 
 ## Extended Types
@@ -54,7 +55,7 @@ Converts a array of enums to a array of strings, the enums must contain the `[De
 * Signature: `public static string?[] ToStringArray<T>(this T[] enumerator)`
 
 #### ToList
-Converts a array of strings to a list of the specified enum. Strings that can't be parsed will be ignored. 
+Converts a array of strings to a list of the specified enum. Strings that can't be parsed will be ignored.
 * Signature: `public static List<T> ToList<T>(IEnumerable<string> arr) where T : Enum`
 
 ### DateTime
@@ -107,7 +108,7 @@ public enum SomeEnum {
 ```
 
 #### ParseEnum
-Parses a string to the specified enum. If it's not possible to parse the enum the exception `InvalidEnumException` will be thrown. 
+Parses a string to the specified enum. If it's not possible to parse the enum the exception `InvalidEnumException` will be thrown.
 * Signature: `public static T ParseEnum<T>(this string str) where T : Enum`
 
 #### TryParseEnum
@@ -126,7 +127,7 @@ Allows to send a http `Patch` request with Json content.
 ### HttpResponseMessage
 #### ReadJsonContentAsAsync
 Allows you directly read from the HttpResponseMessage into a model matching the response Json.
-* Signature: 
+* Signature:
   ```csharp
   public static async Task<T?> ReadJsonContentAsAsync<T>(
     this HttpContent       content,
@@ -194,7 +195,11 @@ Converts a string to a Guid. If it's not possible to parse to a guid it will ret
 
 #### ToUlong
 Converts a string to ulong. If it's not possible to convert it throws a exception.
-* Signature: `public static ulong ToInt64(this string str)`
+* Signature: `public static ulong ToUlong(this string str)`
+
+#### ToLong
+Converts a string to ulong. If it's not possible to convert it throws a exception.
+* Signature: `public static long ToLong(this string str)`
 
 #### ToInt32
 Converts a string to int. If it's not possible to convert it throws a exception.
@@ -221,7 +226,7 @@ Generates the HMAC-SHA256 of a string, the HMAC is returned in a hex string.
 * Signature: `public static string HmacSha256(this string text, string key)`
 
 #### HmacMd5
-Generates the HMAC-MD5 of a string, the HMAC is returned in a hex string. 
+Generates the HMAC-MD5 of a string, the HMAC is returned in a hex string.
 
 **WARNING:** MD5 it is a weak hashing algorithm and it is highly discouraged it's use .
 * Signature: `public static string HmacMd5(this string text, string key)`
@@ -261,6 +266,14 @@ Based on a string generates a CEO friendly string.
 Checks if the string is null or empty.
 * Signature: `public static bool IsNullOrEmpty(this string? str)`
 
+#### TruncateHtmlByWords
+Truncates a chunk of HTML by the Inner Text of the document but keeps the HTML tags. Unclosed tags will be automatically closed.
+* Signature: `public static string TruncateHtmlByWords(this string, int charLimit, bool insertDots = true)`
+
+#### TruncateWords
+Truncates text to a maximum amount of characters, this will not split words.
+* Signature: `public static string TruncateWords(this string text, int maxLength, out bool truncated)`
+
 ## Utilities
 
 * [Json Converters](#json-converters)
@@ -289,7 +302,7 @@ The passphrase must be 128 (16 characters), 192 (24 characters) or 256 (32 chara
 ```csharp
 var cypher = new AesCrypt(passphrase, iv);
 var encrypted = cypher.Encrypt(plaintext);
-var decrypted = cypher.Decrypt(encrypted); 
+var decrypted = cypher.Decrypt(encrypted);
 ```
 
 The following options are also available
@@ -419,6 +432,10 @@ If you have a suggestion that would make this better, please fork the repo and c
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push the commit to the branch (`git push origin feature/AmazingFeature`)
 5. Open a pull request
+
+## Change Log
+
+[Change Log](CHANGELOG.md)
 
 ## License
 
