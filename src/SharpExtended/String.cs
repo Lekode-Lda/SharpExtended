@@ -304,7 +304,7 @@ public static partial class String {
             truncatedText = truncatedText.Insert(tagPosition.Key, tagPosition.Value.Item1);
         }
 
-        for (var i = 0; i < unclosedStack.Count; i++) {
+        for (var i = 0; i <= unclosedStack.Count; i++) {
             if (unclosedStack.Count == 1 && insertDots && truncated)
                 truncatedText += "...";
             truncatedText += unclosedStack.Pop().Replace("<", "</");
