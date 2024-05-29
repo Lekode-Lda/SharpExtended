@@ -10,23 +10,26 @@
         <Description>Adds type extensions, Json Coverters and utilities to C#</Description>
         <Copyright>Lekode © 2023</Copyright>
         <PackageProjectUrl>https://git.lekode.com/lekode/sharpextended</PackageProjectUrl>
-        <PackageIcon>cpp.png</PackageIcon>
+        <PackageIcon>csharp.png</PackageIcon>
         <RepositoryUrl>https://git.lekode.com/lekode/sharpextended</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
+        <Version>1.2.0</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Ensure.Net" Version="2.4.0" />
+      <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
       <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="cpp.png">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-      </None>
+        <None Update="csharp.png" Pack="true" PackagePath="" />
+        <None Include="../../README.md" Pack="true" PackagePath="" />
+        <None Include="../../LICENSE" Pack="true" PackagePath="" />
     </ItemGroup>
 
 </Project>
