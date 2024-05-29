@@ -10,10 +10,10 @@
         <Description>Adds type extensions, Json Coverters and utilities to C#</Description>
         <Copyright>Lekode © 2023</Copyright>
         <PackageProjectUrl>https://git.lekode.com/lekode/sharpextended</PackageProjectUrl>
-        <PackageIcon>cpp.png</PackageIcon>
+        <PackageIcon>csharp.png</PackageIcon>
         <RepositoryUrl>https://git.lekode.com/lekode/sharpextended</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
-        <Version>1.1.0</Version>
+        <Version>1.2.0</Version>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="cpp.png" Pack="true" PackagePath="" />
+        <None Update="csharp.png" Pack="true" PackagePath="" />
         <None Include="../../README.md" Pack="true" PackagePath="" />
         <None Include="../../LICENSE" Pack="true" PackagePath="" />
     </ItemGroup>

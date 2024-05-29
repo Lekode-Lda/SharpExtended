@@ -288,10 +288,13 @@ Truncates text to a maximum amount of characters, this will not split words.
 The following JsonConverts are available:
 * EnumDescriptionConverter;
 * UlongStringifier
+* LongStringifier
 
 The `EnumDescriptionConverter` converts between the given enum but the enum requires the attribute `[Description("")]`, see [Enum](#enum).
 
-The `UlongStringifier` converts between ulong a string to avoid issues with JavaScript.
+The `UlongStringifier` converts between ulong and string to avoid issues with JavaScript.
+
+The `LongStringifier` converts between long and string to avoid issues with JavaScript. Recommended when using Snowflakes as a correctly implemented Snowflake takes 63bits not requiring a ulong.
 
 ### AesCrypt
 
