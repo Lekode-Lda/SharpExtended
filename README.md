@@ -280,6 +280,7 @@ Truncates text to a maximum amount of characters, this will not split words.
   * EnumDescriptionConverter
   * UlongStringifier
 * [AesCrypt](#aescrypt)
+* [Rsa](#rsa)
 * [Security](#security)
 * [Result](#result)
 
@@ -303,23 +304,32 @@ Allows the encryption and decryption of strings using AES algorithm.
 The passphrase must be 128 (16 characters), 192 (24 characters) or 256 (32 characters) bit long and the IV must be 128 bit long (16 characters).
 
 ```csharp
-var cypher = new AesCrypt(passphrase, iv);
-var encrypted = cypher.Encrypt(plaintext);
-var decrypted = cypher.Decrypt(encrypted);
+var encrypted = Aes.Encrypt(plaintext, passphrase, iv);
+var decrypted = Aes.Decrypt(encrypted, passphrase, iv);
 ```
 
-The following options are also available
-```csharp
-public AesCryptOptions() {
-      PasswordHashSalt       = "";
-      PasswordHash           = AesPasswordHash.Sha1;
-      PasswordHashIterations = 1;
-      MinSaltLength          = 0;
-      MaxSaltLength          = 0;
-      FixedKeySize           = null; // if null it will be calculated from the key size
-      PaddingMode            = PaddingMode.PKCS7;
-}
-```
+### Rsa
+
+This class allows you to generate a KeyPair of a specific length and encrypt/decrypt text
+
+#### Key Generation
+To generate a Key Pair just call the GenerateKey method `var keyPair = GenerateKey()`.
+
+The Keys are returned in PEM format. The class that contains the KeyPair has two properties `Public` and `Private` that store the public and private key respectively.
+* Signature: `public static KeyPair GenerateKey(KeySize size = KeySize.L2048)`
+
+#### Encryption
+To encrypt text call the method `Encrypt(string data, string publicKey, RSAEncryptionPadding? padding)`.
+
+It will return the encrypted data in Base64 format, the public key must be in PEM format, the padding when set to null (or not passed) defaults to PKCS1
+* Signature: `public static string Encrypt(string data, string publicKey, RSAEncryptionPadding? padding = null)`
+
+#### Decryption
+To decrypt text call the method `Decrypt(string base64Data, string privateKey, RSAEncryptionPadding? padding)`.
+
+It will return the decrypted data as string, the private key must be in PEM format, the padding when set to null (or not passed) defaults to PKCS1
+* Signature: `public static string Decrypt(string base64Data, string privateKey, RSAEncryptionPadding? padding = null)`
+
 
 ### Security
 
@@ -354,26 +364,6 @@ Generates the HMAC-MD5 of a byte array.
 
 **WARNING:** MD5 it is a weak hashing algorithm and it is highly discouraged it's use.
 * Signature: `public static IEnumerable<byte> HmacMd5(byte[] data, string key)`
-
-#### GenerateRsaKeyPair
-Generates an RSA Public/Private key pair.
-* Signature: `public static RsaPublicPrivateKeyPair GenerateRsaKeyPair(int size = 2048)`
-
-#### RsaEncryptWithPublic
-Encrypts a string using an RSA public key.
-* Signature: `public static string RsaEncryptWithPublic(string clearText, string publicKey)`
-
-#### RsaEncryptWithPrivate
-Encrypts a string using an RSA private key.
-* Signature: `public static string RsaEncryptWithPrivate(string clearText, string privateKey)`
-
-#### RsaDecryptWithPrivate
-Decrypts a string using an RSA private key, the input is a base64 string.
-* Signature: `public static string RsaDecryptWithPrivate(string base64Input, string privateKey)`
-
-#### RsaDecryptWithPublic
-Decrypts a string using an RSA public key, the input is a a base64 string.
-* Signature: `public static string RsaDecryptWithPublic(string base64Input, string publicKey)`
 
 #### Md5
 Generates a MD5 hash.
