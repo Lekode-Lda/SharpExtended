@@ -307,7 +307,10 @@ public static partial class String {
         for (var i = 0; i <= unclosedStack.Count; i++) {
             if (unclosedStack.Count == 1 && insertDots && truncated)
                 truncatedText += "...";
-            truncatedText += unclosedStack.Pop().Replace("<", "</");
+
+            var success = unclosedStack.TryPop(out var close);
+            if (success)
+                truncatedText += close?.Replace("<", "</");
         }
 
         return truncatedText;

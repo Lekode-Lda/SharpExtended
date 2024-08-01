@@ -2,6 +2,10 @@
 
 This file contains the change log for all releases
 
+## 1.3.1
+
+* Prevents a crash when trying to close the stack of tags on TruncateHtmlByWords
+
 ## 1.3.0
 
 * Removed and moved RSA methods, the following methods are now available under the `SharpExtended.Rsa` namespace
