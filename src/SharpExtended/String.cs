@@ -338,5 +338,28 @@ public static partial class String {
 
     [GeneratedRegex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*")]
     private static partial Regex EmailValidationRegex();
+
+    /// <summary>
+    /// Downloads an image (async) and saves it
+    /// </summary>
+    /// <param name="url">URL of the image</param>
+    /// <param name="filePath">Path to save the image</param>
+    public static async Task DownloadImage(this string url, string filePath) {
+        using var client   = new HttpClient();
+        var       response = await client.GetAsync(new Uri(url));
+        var       content  = await response.Content.ReadAsByteArrayAsync();
+        await File.WriteAllBytesAsync(filePath, content);
+    }
+
+    /// <summary>
+    /// Downloads an image (async) and stores it in memory
+    /// </summary>
+    /// <param name="url">URL of the image</param>
+    public static async Task<byte[]> DownloadImage(this string url) {
+        using var client   = new HttpClient();
+        var       response = await client.GetAsync(new Uri(url));
+        var       content  = await response.Content.ReadAsByteArrayAsync();
+        return content;
+    }
     
 }
