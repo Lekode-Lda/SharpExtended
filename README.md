@@ -274,6 +274,14 @@ Truncates a chunk of HTML by the Inner Text of the document but keeps the HTML t
 Truncates text to a maximum amount of characters, this will not split words.
 * Signature: `public static string TruncateWords(this string text, int maxLength, out bool truncated)`
 
+#### DownloadImage
+Downloads an image and saves it to the disk
+* Signature `public static async Task DownloadImage(this string url, string filePath)`
+
+#### DownloadImage
+Downloads an image and stores it in memory
+* Signature `public static async Task DownloadImage(this string url)`
+
 ## Utilities
 
 * [Json Converters](#json-converters)
