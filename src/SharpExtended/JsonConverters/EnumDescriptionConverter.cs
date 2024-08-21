@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+// ReSharper disable NullableWarningSuppressionIsUsed
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
 namespace SharpExtended.JsonConverters;
@@ -20,11 +21,8 @@ public class EnumDescriptionConverter : JsonConverter<object> {
             var fi         = value.GetType().GetField(value.ToString() ?? "");
             var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
             writer.WriteStringValue(attributes.Length > 0 ? attributes[0].Description : value.ToString());
-        }
-        else
-        {
+        } else
             JsonSerializer.Serialize(writer, value, options);
-        }
     }
 
     /// <summary>
@@ -34,14 +32,16 @@ public class EnumDescriptionConverter : JsonConverter<object> {
     /// <param name="value"></param>
     /// <returns></returns>
     private static object GetEnumValue(Type type, string value) {
+        if (Nullable.GetUnderlyingType(type) != null) {
+            type = Nullable.GetUnderlyingType(type)!;
+        }
+
         foreach (var name in Enum.GetNames(type))
         {
             var fi         = type.GetField(name);
             var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (attributes.Length > 0 && attributes[0].Description == value)
-            {
                 return Enum.Parse(type, name);
-            }
         }
         return Enum.Parse(type, value);
     }
