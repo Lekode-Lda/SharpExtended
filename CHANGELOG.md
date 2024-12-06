@@ -2,6 +2,20 @@
 
 This file contains the change log for all releases
 
+## 1.5.0
+
+* Targets .NET 9 
+* Addresses `Package 'System.Text.Encodings.Web' 4.5.0 has a known critical severity vulnerability` warning 
+
+## 1.4.1
+
+* Fixes issue with the JSON EnumDescriptionConverter where it wasn't possible to parse using optional Enums
+
+## 1.4.0
+
+* `imgUrl.DownloadImage(string path)`: Download Image to Disk
+* `imgUrl.DownloadImage()`: Download Image to Memory
+
 ## 1.3.1
 
 * Prevents a crash when trying to close the stack of tags on TruncateHtmlByWords
